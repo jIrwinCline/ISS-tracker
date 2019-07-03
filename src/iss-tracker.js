@@ -1,11 +1,11 @@
-
+import $ from "jquery";
 import {userCity, currentTracker} from "./main.js";
 
 export class ISSTracker{
     constructor(city){
       this.city = city;
-      this.lat = 0;
-      this.lng = 0;
+      this.lat = "kitty";
+      this.lng = "kitty";
       this.dates = [];
     }
     getMapData(inputCity){
@@ -35,15 +35,18 @@ export class ISSTracker{
         this.lat = geoData.results[0].locations[0].latLng.lat;
         this.lng = geoData.results[0].locations[0].latLng.lng;
         console.log(this);
-        getISSData();
+        this.getISSData();
       })
 
     }
 
-      getISSData(){
+     getISSData(){
+
+      let latitude = this.lat;
+      let longitude = this.lng;
       let issQuery = new Promise(function(resolve, reject){
       let request = new XMLHttpRequest();
-      let url = `http://api.open-notify.org/iss-pass.json?lat=${this.lat}&lon=${this.lng}&alt=20&n=5&callback=`
+      let url = `http://api.open-notify.org/iss-pass.json?lat=${latitude}&lon=${longitude}&alt=20&n=5&callback=`
 
       request.onload = function(){
         if (this.status === 200) {
@@ -61,11 +64,15 @@ export class ISSTracker{
       issQuery.then(apiResult => {
         let issPassover = JSON.parse(apiResult);
         console.log(issPassover);
-        for (let i = 0; i < issPassover.reponse.length; i++) {
+        for (let i = 0; i < issPassover.response.length; i++) {
           // this converts the raw risetimes into date objects
           let passoverDate = new Date(issPassover.response[i].risetime * 1000);
           this.dates.push(passoverDate);
+          $('#list').append(`<li>${passoverDate}</li>`);
+
         }
+
+        console.log(this);
 
       });
 

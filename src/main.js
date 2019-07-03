@@ -11,6 +11,8 @@ $(document).ready(function(){
   $(".city-submit").click(function(){
     userCity = $(".city-input").val();
     currentTracker.getMapData(userCity);
+
+      
   })
 
 });
